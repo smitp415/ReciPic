@@ -68,33 +68,11 @@ class PredictRawVeggies:
         json_file.close()
         self.model_final = model_from_json(loaded_model_json)
         self.model_final.load_weights("vgg19_4_50.h5")
-        #load the model
-        # model = applications.VGG19(weights = "imagenet", include_top=False, input_shape = (self.img_width, self.img_height, 3))
-        # #disable few layers
-        # for layer in model.layers[:5]:
-        #     layer.trainable = False
-        #
-        # #Add layers
-        # x = model.output
-        # x = Flatten()(x)
-        # x = Dense(128, activation="relu")(x)
-        # x = Dropout(0.5)(x)
-        # x = Dense(128, activation="relu")(x)
-        # x = Dropout(0.2)(x)
-        # x = Dense(128, activation="relu")(x)
-        # #Add output layer
-        # predictions = Dense(self.num_labels, activation="softmax")(x)
-        # #create the final model
-        # self.model_final = Model(inputs = model.input, outputs = predictions)
-        #load the weights
-        # self.model_final.load_weights("vgg19_4_50.h5")
-        # compile the model
-        # self.model_final.compile(loss = "categorical_crossentropy", optimizer = optimizers.SGD(lr=0.0001, momentum=0.9), metrics=["accuracy"])
 
     ######################################################################
     def call_predict(self, images, folder):
 
-        predictions = []
+        predictions = {}
         #predict
         for image_name in images:
             image_path = folder+ "/" + image_name
@@ -111,12 +89,7 @@ class PredictRawVeggies:
             match_found = False
             newDict = {}
             for pred_value, pred in zip_pred:
-                if(pred_value > .95):
-                    match_found = True
-                newDict[labelTranslate[pred]] = pred_value
-            
-
-            if((match_found)):
-                predictions.append((image_name, newDict))
-
+                newDict[labelTranslate[pred]] = 1 if (pred_value > .95) else 0
+            predictions[image_name] = newDict
         return predictions
+
