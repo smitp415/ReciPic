@@ -12,6 +12,35 @@ import pandas as pd
 from keras import backend as K
 from keras.models import model_from_json
 
+labelTranslate = {
+    'Avocado' : 'avocado',
+    'Beet' : 'beet',
+    'Broccoli' :'broccoli',
+    'Brussels Sprouts' : 'brussels sprouts',
+    'Cabbage' : 'cabbage',
+    'Carrots' : 'carrots',
+    'Cauliflower' : 'cauliflower',
+    'Corn' : 'corn',
+    'Cucumber' : 'cucumber',
+    'Green Beans' : 'green beans',
+    'Green Tomato' : 'tomato',
+    'Green pepper' : 'bell pepper',
+    'Mushroom' : 'mushroom',
+    'Okra' : 'okra',
+    'Orange Onion' : 'onion',
+    'Orange pepper' : 'bell pepper',
+    'Peas' : 'pea',
+    'Potato' : 'potato',
+    'Pumpkin' : 'pumpkin',
+    'Red Onion' : 'onion',
+    'Red pepper' : 'bell pepper',
+    'Spinach' : 'spinach',
+    'Spring Onion' : 'green onion/scallion',
+    'Sweet potato' : 'sweet potato/yam',
+    'Tomato' : 'tomato',
+    'White Onion' : 'onion'
+}
+
 class PredictRawVeggies:
 
     ###########################################################################
@@ -80,12 +109,14 @@ class PredictRawVeggies:
             zip_pred= zip(predict[0], self.labels)
             # if the prediction is high then only senf the value
             match_found = False
+            newDict = {}
             for pred_value, pred in zip_pred:
-                if (pred_value > 0.8):
+                if(pred_value > .95):
                     match_found = True
-                    predictions.append((image_name, pred))
+                newDict[labelTranslate[pred]] = pred_value
+            
 
-            if(not(match_found)):
-                predictions.append((image_name, ""))
+            if((match_found)):
+                predictions.append((image_name, newDict))
 
         return predictions
