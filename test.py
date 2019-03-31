@@ -9,4 +9,4 @@ tester.create_model()
 files = [f for f in listdir('img')]
 res = tester.call_predict(files, 'img')
 pp = pprint.PrettyPrinter(indent=4)
-pp.pprint(res)
+pp.pprint(tester.collapseDict(res))

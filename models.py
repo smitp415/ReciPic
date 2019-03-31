@@ -93,3 +93,13 @@ class PredictRawVeggies:
             predictions[image_name] = newDict
         return predictions
 
+    ######################################################################
+    def collapseDict(self, predictions):
+        newDict = {}
+        for img in predictions:
+            for veg in predictions[img]:
+                if veg not in newDict:
+                    newDict[veg] = predictions[img][veg]
+                elif predictions[img][veg] == 1:
+                    newDict[veg] = 1
+        return newDict
